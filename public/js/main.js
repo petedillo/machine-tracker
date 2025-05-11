@@ -11,7 +11,7 @@ async function loadVersions() {
     await loadVersion();
 }
 
-// Load specific version
+// Load specific versiocolorn
 async function loadVersion() {
     const version = document.getElementById('versionSelect').value;
     const response = await fetch(`/machines/${version}`);
