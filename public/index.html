@@ -5,7 +5,10 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Machine Management System</h1>
+    <div class="header">
+        <h1>Machine Management System</h1>
+        <button id="openModalBtn">Add Machine</button>
+    </div>
     
     <div class="version-selector">
         <label>Select Version:</label>
@@ -13,35 +16,40 @@
         </select>
     </div>
 
-    <div class="add-form">
-        <h2>Add New Machine</h2>
-        <form id="addMachineForm">
-            <div>
-                <label>Hostname:</label>
-                <input type="text" id="hostname" required>
-            </div>
-            <div>
-                <label>User:</label>
-                <input type="text" id="user" required>
-            </div>
-            <div>
-                <label>Device:</label>
-                <input type="text" id="device" required>
-            </div>
-            <div>
-                <label>OS:</label>
-                <input type="text" id="os" required>
-            </div>
-            <div>
-                <label>Role:</label>
-                <input type="text" id="role" required>
-            </div>
-            <button type="submit">Add Machine</button>
-        </form>
+    <!-- Modal -->
+    <div id="addMachineModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Machine</h2>
+            <form id="addMachineForm">
+                <div>
+                    <label>Hostname:</label>
+                    <input type="text" id="hostname" required>
+                </div>
+                <div>
+                    <label>User:</label>
+                    <input type="text" id="user" required>
+                </div>
+                <div>
+                    <label>Device:</label>
+                    <input type="text" id="device" required>
+                </div>
+                <div>
+                    <label>OS:</label>
+                    <input type="text" id="os" required>
+                </div>
+                <div>
+                    <label>Role:</label>
+                    <input type="text" id="role" required>
+                </div>
+                <button type="submit">Add Machine</button>
+            </form>
+        </div>
     </div>
 
     <div id="machinesList"></div>
 
-    <script src="js/main.js"></script>
+    <script src="js/machineUtils.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>

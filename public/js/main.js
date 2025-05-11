@@ -1,3 +1,5 @@
+import { MachineUtils } from './machineUtils.js';
+
 // Load all versions
 async function loadVersions() {
     const response = await fetch('/versions');
@@ -6,7 +8,7 @@ async function loadVersions() {
     select.innerHTML = versions.map(v => 
         `<option value="${v.version}">Version ${v.version} - ${new Date(v.timestamp).toLocaleString()}</option>`
     ).join('');
-    loadVersion();
+    await loadVersion();
 }
 
 // Load specific version
@@ -14,27 +16,26 @@ async function loadVersion() {
     const version = document.getElementById('versionSelect').value;
     const response = await fetch(`/machines/${version}`);
     const data = await response.json();
-    displayMachines(data.machines);
+    MachineUtils.displayMachines(data.machines);
 }
 
-// Display machines
-function displayMachines(machines) {
-    const container = document.getElementById('machinesList');
-    container.innerHTML = Object.entries(machines).map(([name, machine]) => `
-        <div class="machine-card">
-            <h3>${name}</h3>
-            <p>Hostname: ${machine.hostname}</p>
-            <p>User: ${machine.user}</p>
-            <p>Device: ${machine.device}</p>
-            <p>OS: ${machine.os}</p>
-            <p>Role: ${machine.role}</p>
-            <h4>Services:</h4>
-            <pre>${JSON.stringify(machine.services, null, 2)}</pre>
-            <h4>Network:</h4>
-            <pre>${JSON.stringify(machine.network, null, 2)}</pre>
-            <button onclick="editMachine('${name}')">Edit</button>
-        </div>
-    `).join('');
+// Modal functionality
+const modal = document.getElementById('addMachineModal');
+const btn = document.getElementById('openModalBtn');
+const span = document.getElementsByClassName('close')[0];
+
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
 }
 
 // Add new machine
@@ -60,17 +61,18 @@ document.getElementById('addMachineForm').onsubmit = async (e) => {
         body: JSON.stringify(machine)
     });
 
-    loadVersions();
+    modal.style.display = "none";
+    await loadVersions();
     e.target.reset();
 };
-
-// Edit machine functionality (placeholder for now)
-function editMachine(name) {
-    console.log(`Editing machine: ${name}`);
-    // TODO: Implement edit functionality
-}
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     loadVersions();
 });
+
+// Make functions globally available
+window.App = {
+    loadVersions,
+    loadVersion
+};
