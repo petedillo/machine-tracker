@@ -2,55 +2,34 @@
  * Utility class for managing machines in the system.
  */
 export class MachineUtils {
-    /**
-     * Retrieves a specific machine by its version and hostname.
-     * @param {string|number} version - The version of the machine configuration to retrieve
-     * @param {string} hostname - The hostname of the machine to retrieve
-     * @returns {Promise<Object>} The machine object if found
-     */
     static async getMachine(version, hostname) {
         const response = await fetch(`/machines/${version}`);
         const data = await response.json();
         return data.machines[hostname];
     }
 
-    /**
-     * Displays all machines in the DOM.
-     * @param {Object} machines - Object containing all machines, keyed by hostname
-     */
     static displayMachines(machines) {
         const container = document.getElementById('machinesList');
-        container.innerHTML = Object.entries(machines).map(([name, machine]) => 
+        container.innerHTML = Object.entries(machines).map(([name, machine]) =>
             this.createMachineCard(name, machine)
         ).join('');
     }
 
-    /**
-     * Creates an HTML card representation of a machine.
-     * @param {string} name - The hostname of the machine
-     * @param {Object} machine - The machine object containing all machine details
-     * @returns {string} HTML string representing the machine card
-     */
     static createMachineCard(name, machine) {
         return `
-            <div class="machine-card">
-                <h3>${name}</h3>
-                ${this.createBasicInfo(machine)}
-                ${this.createServicesSection(machine.services)}
-                ${this.createNetworkSection(machine.network)}
-                <div class="machine-actions">
-                    <button onclick="MachineUtils.editMachine('${name}')">Edit</button>
-                    <button class="delete-btn" onclick="MachineUtils.deleteMachine('${name}')">Delete</button>
-                </div>
+        <div class="machine-card">
+            <h3>${name}</h3>
+            ${this.createBasicInfo(machine)}
+            ${this.createServicesSection(machine.services, machine.ip)}
+            ${this.createNetworkSection(machine.network)}
+            <div class="machine-actions">
+                <button onclick="MachineUtils.editMachine('${name}')">Edit</button>
+                <button class="delete-btn" onclick="MachineUtils.deleteMachine('${name}')">Delete</button>
             </div>
-        `;
+        </div>
+    `;
     }
 
-    /**
-     * Creates the basic information section of a machine card.
-     * @param {Object} machine - Machine object containing basic information
-     * @returns {string} HTML string for basic information section
-     */
     static createBasicInfo(machine) {
         return `
             <p>Hostname: ${machine.hostname}</p>
@@ -58,35 +37,53 @@ export class MachineUtils {
             <p>Device: ${machine.device}</p>
             <p>OS: ${machine.os}</p>
             <p>Role: ${machine.role}</p>
+            <p>IP: ${machine.ip}</p>
+            <p>Tags: ${machine.tags?.join(', ') || 'None'}</p>
         `;
     }
 
-    /**
-     * Creates the services section of a machine card.
-     * @param {Object} services - Object containing service configurations
-     * @returns {string} HTML string for services section
-     */
-    static createServicesSection(services) {
-        const servicesList = Object.entries(services).map(([name, details]) => `
-            <div class="service-item">
-                <strong>${name}:</strong> 
-                ${Object.entries(details).map(([key, value]) => `${key}: ${value}`).join(', ')}
-            </div>
-        `).join('');
+    static createServicesSection(services, ip) {
+        const servicesList = Object.entries(services).map(([name, details]) => {
+            const hasPort = 'port' in details;
+            const serviceUrl = hasPort ? `http://${ip}:${details.port}` : null;
+
+            if (hasPort) {
+                return `
+                <div class="service-item">
+                    <a href="${serviceUrl}" target="_blank" class="service-tag ${details.type || 'default'}">
+                        ${name} <span class="service-port">:${details.port}</span>
+                    </a>
+                </div>`;
+            } else {
+                const popupContent = Object.entries(details)
+                    .filter(([key]) => key !== 'type')
+                    .map(([key, value]) => `
+                    <div class="service-popup-pair">
+                        <span class="service-popup-key">${key}:</span>
+                        <span class="service-popup-value">${value}</span>
+                    </div>
+                `).join('');
+
+                return `
+                <div class="service-item">
+                    <span class="service-tag ${details.type || 'default'}">${name}</span>
+                    <div class="service-popup">
+                        <div class="service-popup-content">
+                            ${popupContent}
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }).join('');
 
         return `
-            <h4>Services:</h4>
-            <div class="services-list">
-                ${servicesList || '<p>No services configured</p>'}
-            </div>
-        `;
-    }
+        <h4>Services:</h4>
+        <div class="services-list">
+            ${servicesList || '<p>No services configured</p>'}
+        </div>
+    `;
+}
 
-    /**
-     * Creates the network section of a machine card.
-     * @param {Object} network - Network configuration object
-     * @returns {string} HTML string for network section
-     */
     static createNetworkSection(network) {
         return `
             <h4>Network:</h4>
@@ -98,12 +95,6 @@ export class MachineUtils {
         `;
     }
 
-    /**
-     * Creates a list of network items.
-     * @param {string} title - Title for the network list section
-     * @param {string[]} items - Array of network items
-     * @returns {string} HTML string for network list
-     */
     static createNetworkList(title, items) {
         if (!items || items.length === 0) return '';
         return `
@@ -116,15 +107,10 @@ export class MachineUtils {
         `;
     }
 
-    /**
-     * Initiates the machine editing process.
-     * @param {string} hostname - Hostname of the machine to edit
-     * @returns {Promise<void>}
-     */
     static async editMachine(hostname) {
         const version = document.getElementById('versionSelect').value;
         const machine = await this.getMachine(version, hostname);
-        
+
         if (!document.getElementById('editMachineModal')) {
             this.createEditModal();
         }
@@ -133,10 +119,6 @@ export class MachineUtils {
         document.getElementById('editMachineModal').style.display = 'block';
     }
 
-    /**
-     * Creates the edit modal in the DOM if it doesn't exist.
-     * @private
-     */
     static createEditModal() {
         const modalHtml = `
             <div id="editMachineModal" class="modal">
@@ -166,6 +148,14 @@ export class MachineUtils {
                             <input type="text" id="edit-role" required>
                         </div>
                         <div class="form-group">
+                            <label>IP:</label>
+                            <input type="text" id="edit-ip" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags (comma-separated):</label>
+                            <input type="text" id="edit-tags">
+                        </div>
+                        <div class="form-group">
                             <label>Registry Accessible:</label>
                             <input type="checkbox" id="edit-registry-accessible">
                         </div>
@@ -182,17 +172,11 @@ export class MachineUtils {
                 </div>
             </div>
         `;
-        
+
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         this.initializeEditFormHandler();
     }
 
-    /**
-     * Populates the edit form with machine data.
-     * @param {string} hostname - Original hostname of the machine
-     * @param {Object} machine - Machine object containing all details
-     * @private
-     */
     static populateEditForm(hostname, machine) {
         document.getElementById('edit-original-hostname').value = hostname;
         document.getElementById('edit-hostname').value = machine.hostname;
@@ -200,26 +184,29 @@ export class MachineUtils {
         document.getElementById('edit-device').value = machine.device;
         document.getElementById('edit-os').value = machine.os;
         document.getElementById('edit-role').value = machine.role;
+        document.getElementById('edit-ip').value = machine.ip;
+        document.getElementById('edit-tags').value = (machine.tags || []).join(', ');
         document.getElementById('edit-registry-accessible').checked = machine.network.registry_accessible;
         document.getElementById('edit-can-ssh-into').value = (machine.network.can_ssh_into || []).join(', ');
         document.getElementById('edit-accessible-by').value = (machine.network.accessible_by || []).join(', ');
     }
 
-    /**
-     * Initializes the edit form submit handler.
-     * @private
-     */
     static initializeEditFormHandler() {
         document.getElementById('editMachineForm').onsubmit = async (e) => {
             e.preventDefault();
             const originalHostname = document.getElementById('edit-original-hostname').value;
-            
+
             const updatedMachine = {
                 hostname: document.getElementById('edit-hostname').value,
                 user: document.getElementById('edit-user').value,
                 device: document.getElementById('edit-device').value,
                 os: document.getElementById('edit-os').value,
                 role: document.getElementById('edit-role').value,
+                ip: document.getElementById('edit-ip').value,
+                tags: document.getElementById('edit-tags').value
+                    .split(',')
+                    .map(tag => tag.trim())
+                    .filter(tag => tag.length > 0),
                 services: {}, // Maintained from original
                 network: {
                     registry_accessible: document.getElementById('edit-registry-accessible').checked,
@@ -254,11 +241,6 @@ export class MachineUtils {
         };
     }
 
-    /**
-     * Deletes a machine after confirmation.
-     * @param {string} hostname - Hostname of the machine to delete
-     * @returns {Promise<void>}
-     */
     static async deleteMachine(hostname) {
         if (!confirm(`Are you sure you want to delete ${hostname}?`)) {
             return;
@@ -281,5 +263,4 @@ export class MachineUtils {
     }
 }
 
-// Add to window object for onclick handlers
 window.MachineUtils = MachineUtils;
