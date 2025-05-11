@@ -243,3 +243,131 @@ button:hover {
     box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.4);
 }
 
+
+/* Add these new styles */
+.service-tag {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.service-tag:hover {
+    transform: translateY(-2px);
+}
+
+.service-tag.media {
+    background-color: #805ad5;
+    color: white;
+}
+
+.service-tag.registry {
+    background-color: #38a169;
+    color: white;
+}
+
+.service-tag.storage {
+    background-color: #3182ce;
+    color: white;
+}
+
+.service-tag.default {
+    background-color: #718096;
+    color: white;
+}
+
+.service-port {
+    opacity: 0.8;
+    font-size: 0.8em;
+}
+
+.service-detail {
+    display: inline-block;
+    margin-left: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.services-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+}
+/* Service Details Popup */
+.service-popup {
+    display: none;
+    position: absolute;
+    background-color: var(--modal-bg);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    z-index: 1000;
+    min-width: 200px;
+    border: 1px solid var(--border-color);
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    pointer-events: none;
+    animation: fadeIn 0.2s ease;
+}
+
+.service-item {
+    position: relative;
+}
+
+.service-item:hover .service-popup {
+    display: block;
+}
+
+.service-popup::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 20px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--modal-bg);
+    transform: rotate(45deg);
+    border-left: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.service-popup-content {
+    font-size: 0.9rem;
+}
+
+.service-popup-pair {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.service-popup-pair:last-child {
+    border-bottom: none;
+}
+
+.service-popup-key {
+    color: var(--text-secondary);
+    margin-right: 16px;
+    font-weight: 500;
+}
+
+.service-popup-value {
+    color: var(--text-primary);
+}
