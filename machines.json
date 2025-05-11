@@ -1,6 +1,7 @@
 {
   "machines": {
     "diolab": {
+      "ip": "192.168.0.46",
       "hostname": "diolab",
       "user": "pete",
       "device": "Dell Optiplex",
@@ -25,6 +26,7 @@
       }
     },
     "serverpi": {
+      "ip": "192.168.0.27",
       "hostname": "serverpi",
       "user": "pete",
       "device": "Raspberry Pi 4",
@@ -42,6 +44,7 @@
       }
     },
     "clientpi": {
+      "ip": "192.168.0.43",
       "hostname": "clientpi",
       "user": "pete",
       "device": "Raspberry Pi 4",
@@ -59,6 +62,7 @@
       }
     },
     "linuxpad": {
+      "ip": null,
       "hostname": "linuxpad",
       "user": "pedro",
       "device": "ThinkPad",
