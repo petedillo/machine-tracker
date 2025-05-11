@@ -1,0 +1,75 @@
+{
+  "machines": {
+    "diolab": {
+      "hostname": "diolab",
+      "user": "pete",
+      "device": "Dell Optiplex",
+      "os": "Ubuntu (headless)",
+      "role": "main server",
+      "services": {
+        "jellyfin": {
+          "port": 8096
+        },
+        "docker_registry": {
+          "port": 5000
+        },
+        "nas": {
+          "mount": "/storage",
+          "shared": true
+        }
+      },
+      "network": {
+        "can_ssh_into": ["serverpi", "clientpi", "linuxpad"],
+        "accessible_by": ["serverpi", "clientpi", "linuxpad"],
+        "registry_accessible_by": ["serverpi", "clientpi", "linuxpad"]
+      }
+    },
+    "serverpi": {
+      "hostname": "serverpi",
+      "user": "pete",
+      "device": "Raspberry Pi 4",
+      "os": "Raspberry Pi OS",
+      "role": "CI/CD build server",
+      "services": {
+        "jenkins": {
+          "port": 8080
+        }
+      },
+      "network": {
+        "can_ssh_into": ["clientpi"],
+        "accessible_by": ["diolab", "linuxpad"],
+        "registry_accessible": true
+      }
+    },
+    "clientpi": {
+      "hostname": "clientpi",
+      "user": "pete",
+      "device": "Raspberry Pi 4",
+      "os": "Raspberry Pi OS",
+      "role": "web host",
+      "services": {
+        "nginx": {
+          "port": 80,
+          "domain": "petedillo.com"
+        }
+      },
+      "network": {
+        "accessible_by": ["diolab", "serverpi", "linuxpad"],
+        "registry_accessible": true
+      }
+    },
+    "linuxpad": {
+      "hostname": "linuxpad",
+      "user": "pedro",
+      "device": "ThinkPad",
+      "os": "Linux",
+      "role": "development machine",
+      "services": {},
+      "network": {
+        "can_ssh_into": ["diolab", "serverpi", "clientpi"],
+        "accessible_by": ["diolab"],
+        "registry_accessible": true
+      }
+    }
+  }
+}
