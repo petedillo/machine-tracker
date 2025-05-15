@@ -17,6 +17,9 @@
         "nas": {
           "mount": "/storage",
           "shared": true
+        },
+        "ansible": {
+
         }
       },
       "network": {
@@ -71,7 +74,6 @@
       "services": {},
       "network": {
         "can_ssh_into": ["diolab", "serverpi", "clientpi"],
-        "accessible_by": ["diolab"],
         "registry_accessible": true
       }
     }
