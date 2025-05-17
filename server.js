@@ -99,6 +99,14 @@ initializeData().then(() => {
         }
     });
 
+    app.get('/machines', (req, res) => {
+        const currentVersion = versions[versions.length - 1];
+        res.json({
+            version: currentVersion.version,
+            currentVersion
+        });
+    });
+
     app.listen(port, () => {
         console.log(`Server running at http://localhost:${port}`);
     });
