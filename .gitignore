@@ -3,3 +3,5 @@ node_modules
 machine-tracker.iml
 
 /.idea/
+
+.env

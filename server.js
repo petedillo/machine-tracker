@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs').promises;
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -21,7 +22,7 @@ async function initializeData() {
         originalData = { machines: {} };
         await fs.writeFile('machines.json', JSON.stringify(originalData, null, 2));
     }
-    
+
     versions = [{
         timestamp: new Date(),
         data: JSON.parse(JSON.stringify(originalData)),
