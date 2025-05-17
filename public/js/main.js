@@ -2,7 +2,7 @@ import { MachineUtils } from './machineUtils.js';
 
 // Load all versions
 async function loadVersions() {
-    const response = await fetch('/versions');
+    const response = await fetch('/api/versions');
     const versions = await response.json();
     const select = document.getElementById('versionSelect');
     select.innerHTML = versions.map(v => 
@@ -11,10 +11,10 @@ async function loadVersions() {
     await loadVersion();
 }
 
-// Load specific versiocolorn
+// Load specific version
 async function loadVersion() {
     const version = document.getElementById('versionSelect').value;
-    const response = await fetch(`/machines/${version}`);
+    const response = await fetch(`/api/machines/${version}`);
     const data = await response.json();
     MachineUtils.displayMachines(data.machines);
 }
@@ -55,7 +55,7 @@ document.getElementById('addMachineForm').onsubmit = async (e) => {
         }
     };
 
-    await fetch('/machines', {
+    await fetch('/api/machines', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(machine)
