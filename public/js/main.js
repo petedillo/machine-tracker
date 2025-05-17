@@ -73,6 +73,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Make functions globally available
 window.App = {
-    loadVersions,
-    loadVersion
+    loadVersions
 };
