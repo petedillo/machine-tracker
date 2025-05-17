@@ -31,81 +31,13 @@ async function initializeData() {
 
 // Initialize before starting server
 initializeData().then(() => {
-    // Get all versions
-    app.get('/versions', (req, res) => {
-        res.json(versions);
-    });
+    // Import routes
+    const apiRoutes = require('./router/api')(versions, fs);
+    const viewRoutes = require('./router/views')();
 
-    // Get specific version
-    app.get('/machines/:version', (req, res) => {
-        const version = parseInt(req.params.version);
-        const versionData = versions.find(v => v.version === version);
-        if (versionData) {
-            res.json(versionData.data);
-        } else {
-            res.status(404).json({ error: 'Version not found' });
-        }
-    });
-
-    // Add new machine
-    app.post('/machines', async (req, res) => {
-        try {
-            const newMachine = req.body;
-            const lastVersion = versions[versions.length - 1];
-            const newData = JSON.parse(JSON.stringify(lastVersion.data));
-            
-            newData.machines[newMachine.hostname] = newMachine;
-            
-            versions.push({
-                timestamp: new Date(),
-                data: newData,
-                version: lastVersion.version + 1
-            });
-            
-            // Save the latest version to file
-            await fs.writeFile('machines.json', JSON.stringify(newData, null, 2));
-            
-            res.json({ success: true });
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to add machine' });
-        }
-    });
-
-    // Update existing machine
-    app.put('/machines/:hostname', async (req, res) => {
-        try {
-            const hostname = req.params.hostname;
-            const updatedMachine = req.body;
-            const lastVersion = versions[versions.length - 1];
-            const newData = JSON.parse(JSON.stringify(lastVersion.data));
-            
-            if (newData.machines[hostname]) {
-                newData.machines[hostname] = updatedMachine;
-                versions.push({
-                    timestamp: new Date(),
-                    data: newData,
-                    version: lastVersion.version + 1
-                });
-                
-                // Save the latest version to file
-                await fs.writeFile('machines.json', JSON.stringify(newData, null, 2));
-                
-                res.json({ success: true });
-            } else {
-                res.status(404).json({ error: 'Machine not found' });
-            }
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to update machine' });
-        }
-    });
-
-    app.get('/machines', (req, res) => {
-        const currentVersion = versions[versions.length - 1];
-        res.json({
-            version: currentVersion.version,
-            currentVersion
-        });
-    });
+    // Use routes
+    app.use('/api', apiRoutes);
+    app.use('/', viewRoutes);
 
     app.listen(port, () => {
         console.log(`Server running at http://localhost:${port}`);
