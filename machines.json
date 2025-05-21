@@ -20,7 +20,11 @@
         },
         "ansible": {
 
+        },
+        "palworld": {
+          "port": 8211
         }
+
       },
       "network": {
         "can_ssh_into": ["serverpi", "clientpi", "linuxpad"],
@@ -69,12 +73,28 @@
       "hostname": "linuxpad",
       "user": "pedro",
       "device": "ThinkPad",
-      "os": "Linux",
+      "os": "Ubuntu",
       "role": "development machine",
       "services": {},
       "network": {
         "can_ssh_into": ["diolab", "serverpi", "clientpi"],
         "registry_accessible": true
+      }
+    },
+    "macpro": {
+      "ip": "192.168.1.29",
+      "hostname": "macpro",
+      "user": "pedrodelgadillo",
+      "device": "M1 Mac Pro",
+      "os": "macOS",
+      "role": "ai and llm services",
+      "services": {
+        "ollama": {
+          "port": 11434
+        }
+      },
+      "network": {
+        "accessible_by": ["linuxpad"]
       }
     }
   }
