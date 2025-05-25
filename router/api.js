@@ -6,7 +6,6 @@ module.exports = function (versions, fs) {
     router.get('/', (req, res) => {
         const currentVersion = versions[versions.length - 1];
         res.json({
-            version: currentVersion.version,
             currentVersion
         });
     });
