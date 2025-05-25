@@ -86,5 +86,44 @@ module.exports = function (versions, fs) {
         }
     });
 
+    // Dashy config endpoint
+    router.get('/dashy-config', (req, res) => {
+        const currentVersion = versions[versions.length - 1];
+
+        const services = [];
+
+        const machines = currentVersion.data.machines;
+        for (const [hostname, machine] of Object.entries(machines)) {
+            for (const [serviceName, service] of Object.entries(machine.services || {})) {
+                // Fallback to port 80 if not defined
+                const port = service.port || 80;
+                const ip = machine.ip || 'localhost';
+
+                services.push({
+                    name: `${hostname} - ${serviceName}`,
+                    url: `http://${ip}:${port}`,
+                    description: service.description || '',
+                    icon: 'mdi:server'
+                });
+            }
+        }
+
+        const dashyConfig = {
+            appConfig: {
+                title: 'Homelab Dashboard',
+                theme: 'dark',
+            },
+            sections: [
+                {
+                    name: 'Services',
+                    items: services
+                }
+            ]
+        };
+
+        res.json(dashyConfig);
+    });
+
+
     return router;
 };
