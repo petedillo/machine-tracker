@@ -1,8 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const fs = require('fs').promises;
 const app = express();
 const port = process.env.PORT || 3000;
+
+// ✅ Enable CORS for all origins
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
