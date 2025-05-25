@@ -84,7 +84,12 @@
       "role": "development machine",
       "services": {},
       "network": {
-        "can_ssh_into": ["diolab", "serverpi", "clientpi"],
+        "can_ssh_into": [
+          "diolab",
+          "serverpi",
+          "clientpi",
+          "macpro"
+        ],
         "registry_accessible": true
       }
     },
