@@ -9,22 +9,32 @@
       "role": "main server",
       "services": {
         "jellyfin": {
-          "port": 8096
+          "port": 8096,
+          "description": "Media server for streaming movies, TV shows, music, and photos"
         },
         "docker_registry": {
-          "port": 5000
+          "port": 5000,
+          "description": "Private Docker registry for storing and distributing container images"
         },
         "nas": {
           "mount": "/storage",
-          "shared": true
+          "shared": true,
+          "description": "Network Attached Storage service providing shared storage space accessible across the network"
         },
         "ansible": {
-
+          "description": "Configuration management and automation tool for maintaining system configurations"
         },
         "palworld": {
-          "port": 8211
+          "port": 8211,
+          "description": "Dedicated game server for hosting Palworld multiplayer sessions"
+        },
+        "minecraft": {
+          "port": 25565,
+          "description": "Dedicated game server for hosting Minecraft multiplayer sessions"
+        },
+        "gameserver-agent": {
+          "description": "FastAPI-based service that manages game servers through systemctl, providing REST endpoints for starting, stopping, restarting, and monitoring Minecraft and Palworld servers"
         }
-
       },
       "network": {
         "can_ssh_into": ["serverpi", "clientpi", "linuxpad"],
@@ -41,7 +51,8 @@
       "role": "CI/CD build server",
       "services": {
         "jenkins": {
-          "port": 8080
+          "port": 8080,
+          "description": "Continuous Integration/Continuous Deployment automation server for building and deploying applications"
         }
       },
       "network": {
@@ -58,10 +69,6 @@
       "os": "Raspberry Pi OS",
       "role": "web host",
       "services": {
-        "nginx": {
-          "port": 80,
-          "domain": "petedillo.com"
-        }
       },
       "network": {
         "accessible_by": ["diolab", "serverpi", "linuxpad"],
@@ -90,7 +97,8 @@
       "role": "ai and llm services",
       "services": {
         "ollama": {
-          "port": 11434
+          "port": 11434,
+          "description": "Local LLM service for running and managing AI models"
         }
       },
       "network": {
