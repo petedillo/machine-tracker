@@ -110,7 +110,7 @@ module.exports = function (versions, fs) {
 
         const dashyConfig = {
             appConfig: {
-                title: 'Homelab Dashboard',
+                title: 'Dio Dashboard',
                 theme: 'dark',
             },
             sections: [
