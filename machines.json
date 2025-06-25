@@ -50,7 +50,7 @@
       "hostname": "serverpi",
       "device": "Raspberry Pi 4",
       "os": "Raspberry Pi OS",
-      "role": "CI/CD build server",
+      "role": "backend services for clientpi",
       "services": {},
       "network": {
         "can_ssh_into": ["clientpi"],
