@@ -33,6 +33,10 @@
         },
         "gameserver-agent": {
           "description": "FastAPI-based service that manages game servers through systemctl, providing REST endpoints for starting, stopping, restarting, and monitoring Minecraft and Palworld servers"
+        },
+        "jenkins": {
+          "port": 8080,
+          "description": "Continuous Integration/Continuous Deployment automation server for building and deploying applications"
         }
       },
       "network": {
@@ -47,12 +51,7 @@
       "device": "Raspberry Pi 4",
       "os": "Raspberry Pi OS",
       "role": "CI/CD build server",
-      "services": {
-        "jenkins": {
-          "port": 8080,
-          "description": "Continuous Integration/Continuous Deployment automation server for building and deploying applications"
-        }
-      },
+      "services": {},
       "network": {
         "can_ssh_into": ["clientpi"],
         "accessible_by": ["diolab", "linuxpad"],
@@ -69,6 +68,10 @@
         "nginx": {
           "port": 81,
           "description": "Nginx Proxy Manager"
+        },
+        "diochat": {
+          "port": 50000,
+          "description": "DioChat, an AI chat application"
         }
       },
       "network": {
@@ -94,7 +97,7 @@
       }
     },
     "macpro": {
-      "ip": "192.168.1.34",
+      "ip": "192.168.0.18",
       "hostname": "macpro",
       "device": "M1 Mac Pro",
       "os": "macOS",
@@ -103,10 +106,17 @@
         "ollama": {
           "port": 11434,
           "description": "Local LLM service for running and managing AI models"
+        },
+        "diochat": {
+          "port": 3000,
+          "description": "Backend for DioChat, a chat application"
         }
       },
       "network": {
-        "accessible_by": ["linuxpad"]
+        "accessible_by": [
+          "linuxpad",
+          "diolab"
+        ]
       }
     }
   }
