@@ -16,8 +16,6 @@
           "description": "Private Docker registry for storing and distributing container images"
         },
         "nas": {
-          "mount": "/storage",
-          "shared": true,
           "description": "Network Attached Storage service providing shared storage space accessible across the network"
         },
         "ansible": {
