@@ -35,6 +35,10 @@
         "jenkins": {
           "port": 8080,
           "description": "Continuous Integration/Continuous Deployment automation server for building and deploying applications"
+        },
+        "postgres": {
+          "port": 5432,
+          "description": "PostgreSQL database server running in a Docker container"
         }
       },
       "network": {
