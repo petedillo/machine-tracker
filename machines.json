@@ -49,7 +49,12 @@
       "device": "Raspberry Pi 4",
       "os": "Raspberry Pi OS",
       "role": "backend services for clientpi",
-      "services": {},
+      "services": {
+        "diochat-api": {
+          "port": 3000,
+          "description": "DioChat backend services"
+        }
+      },
       "network": {
         "can_ssh_into": ["clientpi"],
         "accessible_by": ["diolab", "linuxpad"],
